@@ -51,6 +51,6 @@
     @include('layout.sidebar')
    </div>
   </main>
-      @include('layout.foot')
+    @include('layout.foot')
   </body>
 </html>

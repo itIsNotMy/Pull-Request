@@ -17,4 +17,10 @@ Route::post('/contacts', [ContactController::class, 'store'])->name('contacts');
 
 Route::get('/admin/feedback', [ContactController::class, 'adminFeedback'])->name('adminFeedback');
 
+Route::get('/articles/edit/{articles}', [ArticleController::class, 'edit'])->name('articlesEdit');
+
 Route::get('/articles/{articles}', [ArticleController::class, 'show'])->name('articles');
+
+Route::patch('/articles/{articles}', [ArticleController::class, 'update']);
+
+Route::delete('/articles/{articles}', [ArticleController::class, 'destroy']);

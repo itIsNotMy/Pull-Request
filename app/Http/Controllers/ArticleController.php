@@ -31,19 +31,30 @@ class ArticleController extends Controller
 
     public function store()
     {
-        return request()->method();
-        $valArray = $this->validate(request(), [
-                        'code' => 'alpha_dash|unique:articles',
-                        'title' => 'required|between:5,100',
-                        'description' => 'required|max:255',
-                        'text' => 'required',
-                        ]);
-
-        if (request()->input('checkbox') !== null) {
-            $valArray += ['datePublished' => Carbon::now()];
-        }
+        $valArray = FormRequest::requestHandler(request());
 
         Article::create($valArray);
+
+        return redirect(route('index'));
+    }
+    
+    public function edit (Article $articles)
+    {
+        return view('articles.edit', compact('articles'));
+    }
+    
+    public function update(Article $articles)
+    {
+        $valArray = FormRequest::requestHandler(request(), $articles);
+
+        $articles->update($valArray);
+
+        return redirect(route('index'));
+    }
+    
+    public function destroy(Article $articles)
+    {
+        $articles->delete();
 
         return redirect(route('index'));
     }
