@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Http\Requests\MyFormRequest;
 use Carbon\Carbon;
 
 class ArticleController extends Controller
@@ -14,9 +15,9 @@ class ArticleController extends Controller
         return view('welcome', compact('articles'));
     }
 
-    public function show(Article $articles)
+    public function show(Article $article)
     {
-        return view('articles', compact('articles'));
+        return view('articles', compact('article'));
     }
 
     public function create()
@@ -29,33 +30,41 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store()
+    public function store(MyFormRequest $request)
     {
-        $valArray = FormRequest::requestHandler(request());
+        $valArray = $request->validated();
+
+        if (request()->checkbox !== null) {
+            $valArray += ['datePublished' => Carbon::now()];
+        }
 
         Article::create($valArray);
 
-        return redirect(route('index'));
+        return redirect(route('articles.index'));
     }
     
-    public function edit (Article $articles)
+    public function edit (Article $article)
     {
-        return view('articles.edit', compact('articles'));
+        return view('edit', compact('article'));
     }
     
-    public function update(Article $articles)
+    public function update(MyFormRequest $request, Article $article)
     {
-        $valArray = FormRequest::requestHandler(request(), $articles);
+        $valArray = $request->validated();
 
-        $articles->update($valArray);
+        if (request()->checkbox !== null) {
+            $valArray += ['datePublished' => Carbon::now()];
+        }
 
-        return redirect(route('index'));
+        $article->update($valArray);
+
+        return redirect(route('articles.index'));
     }
     
-    public function destroy(Article $articles)
+    public function destroy(Article $article)
     {
-        $articles->delete();
+        $article->delete();
 
-        return redirect(route('index'));
+        return redirect(route('articles.index'));
     }
 }
