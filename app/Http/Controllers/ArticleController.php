@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
-use App\Http\Requests\MyFormRequest;
+use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
 
 class ArticleController extends Controller
@@ -30,15 +30,9 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store(MyFormRequest $request)
+    public function store(PostingRequestAndUpdatingArticles $request)
     {
-        $valArray = $request->validated();
-
-        if (request()->checkbox !== null) {
-            $valArray += ['datePublished' => Carbon::now()];
-        }
-
-        Article::create($valArray);
+        Article::create($request->validated());
 
         return redirect(route('articles.index'));
     }
@@ -48,15 +42,9 @@ class ArticleController extends Controller
         return view('edit', compact('article'));
     }
     
-    public function update(MyFormRequest $request, Article $article)
+    public function update(PostingRequestAndUpdatingArticles $request, Article $article)
     {
-        $valArray = $request->validated();
-
-        if (request()->checkbox !== null) {
-            $valArray += ['datePublished' => Carbon::now()];
-        }
-
-        $article->update($valArray);
+        $article->update($request->validated());
 
         return redirect(route('articles.index'));
     }

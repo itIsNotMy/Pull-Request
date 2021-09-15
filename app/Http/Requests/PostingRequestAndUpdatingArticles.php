@@ -4,20 +4,28 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use Carbon\Carbon;
 
-class MyFormRequest extends FormRequest
+class PostingRequestAndUpdatingArticles extends FormRequest
 {
     public function authorize()
     {
         return true;
     }
+    
+    protected function prepareForValidation()
+    {
+        if ($this->datePublished !== null) {
+            $this->merge(['datePublished' => Carbon::now()]);
+        }
+    }
 
     public function rules()
     {
-        if (request()->method() == 'POST') {
+        if ($this->method() == 'POST') {
             $code = 'alpha_dash|unique:articles';
         } else {
-            $code = ['alpha_dash', Rule::unique('articles')->ignore(request()->code, 'code')];
+            $code = ['alpha_dash', Rule::unique('articles')->ignore($this->code, 'code')];
         }
 
         return [
@@ -25,6 +33,7 @@ class MyFormRequest extends FormRequest
             'title' => 'required|between:5,100',
             'description' => 'required|max:255',
             'text' => 'required',
+            'datePublished' => '',
         ];
     }
 }

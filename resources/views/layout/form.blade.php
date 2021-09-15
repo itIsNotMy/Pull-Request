@@ -8,7 +8,7 @@
     </ul>
 </div>
 @endif
-<form method="post" action={{$action}}>
+<form method="post" action="{{$action}}">
 @csrf
 @method($method)
   <div class="mb-3">
@@ -28,7 +28,7 @@
     <textarea type="text" class="form-control" name="text" rows="6">{{  old('text', $article->text ?? '') }}</textarea>
   </div>
   <div class="mb-3 form-check">
-    <input type="checkbox" name="checkbox" checked="checked"">
+    <input type="checkbox" name="datePublished" checked="checked"">
     <label class="form-check-label" for="exampleCheck1">Опубликовать</label>
   </div>
   <button type="submit" class="btn btn-primary">{{$button}}</button>
