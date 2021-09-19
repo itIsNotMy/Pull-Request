@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
 
 class ArticleController extends Controller
@@ -14,9 +15,9 @@ class ArticleController extends Controller
         return view('welcome', compact('articles'));
     }
 
-    public function show(Article $articles)
+    public function show(Article $article)
     {
-        return view('articles', compact('articles'));
+        return view('articles', compact('article'));
     }
 
     public function create()
@@ -29,22 +30,29 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store()
+    public function store(PostingRequestAndUpdatingArticles $request)
     {
-        return request()->method();
-        $valArray = $this->validate(request(), [
-                        'code' => 'alpha_dash|unique:articles',
-                        'title' => 'required|between:5,100',
-                        'description' => 'required|max:255',
-                        'text' => 'required',
-                        ]);
+        Article::create($request->validated());
 
-        if (request()->input('checkbox') !== null) {
-            $valArray += ['datePublished' => Carbon::now()];
-        }
+        return redirect(route('articles.index'));
+    }
+    
+    public function edit (Article $article)
+    {
+        return view('edit', compact('article'));
+    }
+    
+    public function update(PostingRequestAndUpdatingArticles $request, Article $article)
+    {
+        $article->update($request->validated());
 
-        Article::create($valArray);
+        return redirect(route('articles.index'));
+    }
+    
+    public function destroy(Article $article)
+    {
+        $article->delete();
 
-        return redirect(route('index'));
+        return redirect(route('articles.index'));
     }
 }
