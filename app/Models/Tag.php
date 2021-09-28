@@ -4,17 +4,17 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Article extends Model
+class Tag extends Model
 {
     public $guarded =[];
     
     public function getRouteKeyName()
     {
-        return 'code';
+        return 'title';
     }
     
-    public function tags()
+    public function articles()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->belongsToMany(Article::class);
     }
 }

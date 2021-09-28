@@ -2,6 +2,9 @@
 
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\TagsController;
+
+Route::get('/articles/tags/{tag}', [TagsController::class, 'index'])->name('articles.tags');
 
 Route::get('/', [ArticleController::class, 'index']);
 
