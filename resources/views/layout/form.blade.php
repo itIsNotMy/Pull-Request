@@ -28,20 +28,13 @@
     <textarea type="text" class="form-control" name="text" rows="6">{{  old('text', $article->text ?? '') }}</textarea>
   </div>
   <div class="mb-3 form-check">
-    @if ($article->tags->isNotEmpty())
+    @if (!empty($article) && $article->tags->isNotEmpty())
     <label class="form-label">Теги статьи: </label>
-    @foreach ($article->tags as $val)
-    <input type="checkbox" name="{{ $val->title }}" checked="checked">
-    <label class="form-check-label" for="exampleCheck1">{{ $val->title }}</label>
-    @endforeach
+    <input type="text" class="form-control" name="tags" value="{{ $article->tags->pluck('title')->implode(',') }}">
     @endif
-    <br/>
-    @if ($tags->isNotEmpty())
+    @if (!empty($tags) && $tags->isNotEmpty())
     <label class="form-label">Добавить теги: </label>
-    @foreach ($tags as $val)
-    <input type="checkbox" name="{{ $val->title }}">
-    <label class="form-check-label" for="exampleCheck1">{{ $val->title }}</label>
-    @endforeach
+    <input type="text" class="form-control" name="tags" value="{{ $tags->pluck('title')->implode(',') ?? '' }}">
     @endif
   </div>
   <div class="mb-3 form-check">

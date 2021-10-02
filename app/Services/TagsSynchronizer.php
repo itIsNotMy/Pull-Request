@@ -5,19 +5,20 @@ namespace App\Services;
 use App\Models\Article;
 use App\Models\Tag;
 
-class TagsSynchronizer
+class TagsSynchronizer implements TagsSynchronizerInterface
 {
-    public function sync($tagsRequest, Article $article)
+    public function sync(\Illuminate\Support\Collection $Collection, Article $article)
     {
+
         $articleTags = $article->tags->keyBy('title');
 
-        $tagsAdded = $tagsRequest->diffKeys($articleTags);
+        $tagsAdded = $Collection->diffKeys($articleTags);
 
-        $tagsRemote = $articleTags->diffKeys($tagsRequest);
-
+        $tagsRemote = $articleTags->diffKeys($Collection);
+        
         if ($tagsAdded->isNotEmpty()) {
             foreach ($tagsAdded as $val){
-                $tag = Tag::where('title', $val)->get();
+                $tag = Tag::firstOrCreate(['title' => $val]);
                 $article->tags()->attach($tag);
             }
         }

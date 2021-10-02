@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
+use App\Services\TagsSynchronizerInterface as TagsSynchronizer;
 
 class ArticleController extends Controller
 {
@@ -33,55 +34,29 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store(PostingRequestAndUpdatingArticles $request)
+    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizer $TagsSynchronizer)
     {
         $article = Article::create($request->validated());
 
-        foreach ($request->request as $key => $val) {
-            if ($val == 'on') {
-               $arrayTagsTitle[$key] = $key;
-            } else if (empty($arrayTagsTitle)) {
-                $arrayTagsTitle = [];
-            }
-        }
+        $TagsSynchronizer->sync($request->tags, $article);
 
-        $tagsRequest = collect($arrayTagsTitle)->keyBy(function($key){return $key;});
-        
-        app('TagsSynchronizer')->sync($tagsRequest, $article);
-        
         return redirect(route('articles.index'));
     }
-    
+
     public function edit (Article $article)
     {
-        $tagsAll = Tag::all()->keyBy(function($val){return $val->title;});
-
-        $articleTags = ($article->tags)->keyBy(function($val){return $val->title;});
-
-        $tags = $tagsAll->diffKeys($articleTags);
-
-        return view('edit', compact('article'), compact('tags'));
+        return view('edit', compact('article'));
     }
-    
-    public function update(PostingRequestAndUpdatingArticles $request, Article $article)
-    {   
+
+    public function update(PostingRequestAndUpdatingArticles $request, Article $article, TagsSynchronizer $TagsSynchronizer)
+    {
         $article->update($request->validated());
 
-        foreach ($request->request as $key => $val) {
-            if ($val == 'on') {
-               $arrayTagsTitle[$key] = $key;
-            } else if (empty($arrayTagsTitle)) {
-                $arrayTagsTitle = [];
-            }
-        }
+        $TagsSynchronizer->sync($request->tags, $article);
 
-        $tagsRequest = collect($arrayTagsTitle)->keyBy(function($key){return $key;});
-        
-        app('TagsSynchronizer')->sync($tagsRequest, $article);
-        
         return redirect(route('articles.index'));
     }
-    
+
     public function destroy(Article $article)
     {
         $article->delete();
