@@ -48,7 +48,7 @@ class ArticleController extends Controller
         return view('edit', compact('article'));
     }
 
-    public function update(PostingRequestAndUpdatingArticles $request, Article $article, TagsSynchronizer $TagsSynchronizer)
+    public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizer $TagsSynchronizer, Article $article)
     {
         $article->update($request->validated());
 

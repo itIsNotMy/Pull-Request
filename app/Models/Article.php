@@ -3,8 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Services\TaggingModel;
 
-class Article extends Model
+class Article extends Model implements TaggingModel
 {
     public $guarded =[];
     

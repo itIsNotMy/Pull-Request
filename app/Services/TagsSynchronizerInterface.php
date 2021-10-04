@@ -7,5 +7,5 @@ use App\Models\Tag;
 
 interface TagsSynchronizerInterface
 {
-    public function sync(\Illuminate\Support\Collection $tags, Article $article);
+    public function sync(\Illuminate\Support\Collection $tags, \App\Services\TaggingModel $model);
 }

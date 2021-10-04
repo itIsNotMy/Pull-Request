@@ -2,15 +2,14 @@
 
 namespace App\Services;
 
-use App\Models\Article;
 use App\Models\Tag;
 
 class TagsSynchronizer implements TagsSynchronizerInterface
 {
-    public function sync(\Illuminate\Support\Collection $Collection, Article $article)
+    public function sync(\Illuminate\Support\Collection $Collection, \App\Services\TaggingModel $model)
     {
 
-        $articleTags = $article->tags->keyBy('title');
+        $articleTags = $model->tags->keyBy('title');
 
         $tagsAdded = $Collection->diffKeys($articleTags);
 
@@ -19,12 +18,12 @@ class TagsSynchronizer implements TagsSynchronizerInterface
         if ($tagsAdded->isNotEmpty()) {
             foreach ($tagsAdded as $val){
                 $tag = Tag::firstOrCreate(['title' => $val]);
-                $article->tags()->attach($tag);
+                $model->tags()->attach($tag);
             }
         }
 
         if ($tagsRemote->isNotEmpty()) {
-            $article->tags()->detach($tagsRemote);
+            $model->tags()->detach($tagsRemote);
         }
     }
 }
