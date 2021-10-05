@@ -6,7 +6,7 @@ use App\Models\Article;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
-use App\Services\TagsSynchronizerInterface as TagsSynchronizer;
+use App\Services\TagsSynchronizerInterface;
 
 class ArticleController extends Controller
 {
@@ -34,7 +34,7 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizer $TagsSynchronizer)
+    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer)
     {
         $article = Article::create($request->validated());
 
@@ -48,7 +48,7 @@ class ArticleController extends Controller
         return view('edit', compact('article'));
     }
 
-    public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizer $TagsSynchronizer, Article $article)
+    public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer, Article $article)
     {
         $article->update($request->validated());
 

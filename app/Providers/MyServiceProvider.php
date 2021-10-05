@@ -12,8 +12,6 @@ class MyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(\App\Services\TagsSynchronizerInterface::class, \App\Services\TagsSynchronizer::class);
-
-        $this->app->bind(\App\Services\TaggingModel::class, \App\Models\Article::class);
     }
     
     public function boot()
