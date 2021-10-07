@@ -28,7 +28,17 @@
     <textarea type="text" class="form-control" name="text" rows="6">{{  old('text', $article->text ?? '') }}</textarea>
   </div>
   <div class="mb-3 form-check">
-    <input type="checkbox" name="datePublished" checked="checked"">
+    @if (!empty($article) && $article->tags->isNotEmpty())
+    <label class="form-label">Теги статьи: </label>
+    <input type="text" class="form-control" name="tags" value="{{ $article->tags->pluck('title')->implode(',') }}">
+    @endif
+    @if (!empty($tags) && $tags->isNotEmpty())
+    <label class="form-label">Добавить теги: </label>
+    <input type="text" class="form-control" name="tags" value="{{ $tags->pluck('title')->implode(',') ?? '' }}">
+    @endif
+  </div>
+  <div class="mb-3 form-check">
+    <input type="checkbox" name="datePublished" checked="checked">
     <label class="form-check-label" for="exampleCheck1">Опубликовать</label>
   </div>
   <button type="submit" class="btn btn-primary">{{$button}}</button>

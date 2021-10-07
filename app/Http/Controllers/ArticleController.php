@@ -3,14 +3,16 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
+use App\Services\TagsSynchronizerInterface;
 
 class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::whereNotNull('datePublished')->latest()->get();
+        $articles = Article::with('tags')->whereNotNull('datePublished')->latest()->get();
 
         return view('welcome', compact('articles'));
     }
@@ -22,7 +24,9 @@ class ArticleController extends Controller
 
     public function create()
     {
-        return view('articles.create');
+        $tags = Tag::all();
+
+        return view('articles.create', compact('tags'));
     }
 
     public function about()
@@ -30,25 +34,29 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store(PostingRequestAndUpdatingArticles $request)
+    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer)
     {
-        Article::create($request->validated());
+        $article = Article::create($request->validated());
+
+        $TagsSynchronizer->sync($request->tags, $article);
 
         return redirect(route('articles.index'));
     }
-    
+
     public function edit (Article $article)
     {
         return view('edit', compact('article'));
     }
-    
-    public function update(PostingRequestAndUpdatingArticles $request, Article $article)
+
+    public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer, Article $article)
     {
         $article->update($request->validated());
 
+        $TagsSynchronizer->sync($request->tags, $article);
+
         return redirect(route('articles.index'));
     }
-    
+
     public function destroy(Article $article)
     {
         $article->delete();

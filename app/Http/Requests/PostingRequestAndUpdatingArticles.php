@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Carbon\Carbon;
+use App\Services\TagsCollection;
 
 class PostingRequestAndUpdatingArticles extends FormRequest
 {
@@ -18,6 +19,10 @@ class PostingRequestAndUpdatingArticles extends FormRequest
         if ($this->datePublished !== null) {
             $this->merge(['datePublished' => Carbon::now()]);
         }
+
+        $tagsRequest = collect(explode(',', $this->tags))->keyBy(function($key){return $key;});
+
+        $this->merge(['tags' => $tagsRequest]);
     }
 
     public function rules()
