@@ -9,7 +9,7 @@ use Carbon\Carbon;
 use App\Services\TagsSynchronizerInterface;
 
 class ArticleController extends Controller
-{
+{   
     public function index()
     {
         $articles = Article::with('tags')->whereNotNull('datePublished')->latest()->get();
@@ -23,14 +23,16 @@ class ArticleController extends Controller
     }
 
     public function create()
-    {
+    {   
+        $this->authorize('create', Article::class);
+
         $tags = Tag::all();
 
         return view('articles.create', compact('tags'));
     }
 
     public function about()
-    {
+    {   
         return view('about');
     }
 
@@ -44,7 +46,9 @@ class ArticleController extends Controller
     }
 
     public function edit (Article $article)
-    {
+    {   
+        $this->authorize('update', $article);
+
         return view('edit', compact('article'));
     }
 
@@ -59,6 +63,8 @@ class ArticleController extends Controller
 
     public function destroy(Article $article)
     {
+        $this->authorize('delete', $article);
+
         $article->delete();
 
         return redirect(route('articles.index'));

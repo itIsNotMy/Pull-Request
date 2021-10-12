@@ -20,7 +20,9 @@ class CreateArticlesTable extends Migration
             $table->text('description');
             $table->text('text');
             $table->dateTime('datePublished')->nullable();
+            $table->unsignedInteger('owner_id');
             $table->timestamps();
+            $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

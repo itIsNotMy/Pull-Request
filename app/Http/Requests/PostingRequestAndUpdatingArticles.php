@@ -23,6 +23,8 @@ class PostingRequestAndUpdatingArticles extends FormRequest
         $tagsRequest = collect(explode(',', $this->tags))->keyBy(function($key){return $key;});
 
         $this->merge(['tags' => $tagsRequest]);
+        
+        $this->merge(['owner_id' => auth()->id()]);
     }
 
     public function rules()
@@ -39,6 +41,7 @@ class PostingRequestAndUpdatingArticles extends FormRequest
             'description' => 'required|max:255',
             'text' => 'required',
             'datePublished' => '',
+            'owner_id' => '',
         ];
     }
 }

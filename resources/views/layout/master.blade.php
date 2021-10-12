@@ -48,7 +48,9 @@
    <div class="col-md-8">
     @yield('content')
    </div>
+   @section('sidebar')
     @include('layout.sidebar')
+   @show
    </div>
   </main>
     @include('layout.foot')
