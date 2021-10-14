@@ -38,7 +38,9 @@
       <a class="p-2 text-muted" href="{{ route('articles.index') }}">Главная</a>
       <a class="p-2 text-muted" href="{{ route('about') }}">О нас</a>
       <a class="p-2 text-muted" href="{{ route('contacts') }}">Контакты</a>
+      @can('create', $article ?? '')
       <a class="p-2 text-muted" href="{{ route('articles.create') }}">Создать статью</a>
+      @endcan
       <a class="p-2 text-muted" href="{{ route('admin.feedback') }}">Админ. раздел</a>
     </nav>
   </div>
