@@ -1,0 +1,29 @@
+<?php
+
+namespace App\Mail;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Mail\Mailable;
+use Illuminate\Queue\SerializesModels;
+
+class ArticlesMail extends Mailable
+{
+    use Queueable, SerializesModels;
+
+    public $article;
+    
+    public $action;
+
+    public function __construct($article, $action)
+    {
+        $this->article = $article;
+        
+        $this->action = $action;
+    }
+
+    public function build()
+    {
+        return $this->markdown('mail.articles', compact($this->article), $this->action);
+    }
+}

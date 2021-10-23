@@ -18,4 +18,9 @@ class Article extends Model implements TaggingModel
     {
         return $this->belongsToMany(Tag::class);
     }
+    
+    public function owner()
+    {
+        return $this->hasOne(User::class, 'id', 'owner_id');
+    }
 }
