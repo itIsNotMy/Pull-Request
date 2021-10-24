@@ -13,7 +13,7 @@ class SendArticleCreateNotification
     
     public function handle(ArticleCreate $event)
     {
-        \Mail::to(env('MAIL_USERNAME'))->send(
+        \Mail::to(adminMail())->send(
             new ArticlesMail($event->article, $this->action)
         );
     }
