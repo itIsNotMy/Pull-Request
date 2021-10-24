@@ -5,16 +5,14 @@ namespace App\Listeners;
 use App\Events\ArticleCreate;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
-use App\Mail\ArticlesMail;
+use App\Mail\ArticleMailCreate;
 
 class SendArticleCreateNotification
 {
-    public $action = 'create';
-    
     public function handle(ArticleCreate $event)
     {
         \Mail::to(adminMail())->send(
-            new ArticlesMail($event->article, $this->action)
+            new ArticleMailCreate($event->article)
         );
     }
 }

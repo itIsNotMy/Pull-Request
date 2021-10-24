@@ -7,19 +7,18 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class ArticlesMail extends Mailable
+class ArticleMailCreate extends Mailable
 {
     use Queueable, SerializesModels;
-
+    
     public $article;
 
     public function __construct($article)
     {
         $this->article = $article;
     }
-
     public function build()
     {
-        return $this->markdown('mail.articles');
+        return $this->markdown('mail.articleCreate');
     }
 }
