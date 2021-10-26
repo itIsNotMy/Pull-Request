@@ -11,7 +11,7 @@ class SendArticleDeleteNotification
 {
     public function handle(ArticleDelete $event)
     {
-        \Mail::to(adminMail())->send(
+        \Mail::to(\Config::get('mailAdmin.mailAdmin', 'qwe@gmail.com'))->send(
             new ArticleMailDelete($event->article)
         );
     }

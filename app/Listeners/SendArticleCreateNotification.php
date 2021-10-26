@@ -11,7 +11,7 @@ class SendArticleCreateNotification
 {
     public function handle(ArticleCreate $event)
     {
-        \Mail::to(adminMail())->send(
+        \Mail::to(\Config::get('mailAdmin.mailAdmin', 'qwe@gmail.com'))->send(
             new ArticleMailCreate($event->article)
         );
     }

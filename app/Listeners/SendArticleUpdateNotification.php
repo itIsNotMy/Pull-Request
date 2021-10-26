@@ -11,7 +11,7 @@ class SendArticleUpdateNotification
 {
     public function handle(ArticleUpdate $event)
     {
-        \Mail::to(adminMail())->send(
+        \Mail::to(\Config::get('mailAdmin.mailAdmin', 'qwe@gmail.com'))->send(
             new ArticleMailUpdete($event->article)
         );
     }

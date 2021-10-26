@@ -1,5 +1,5 @@
 <?php
 
-function adminMail(){
-    return 'qwe@gmail.ru';
-}
+return [
+ 'mailAdmin' => 'qwe@gmail.ru',
+];
