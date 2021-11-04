@@ -15,7 +15,7 @@ class ArticleController extends Controller
 {   
     public function index()
     {
-        $articles = Article::with('tags')->whereNotNull('datePublished')->latest()->get();
+        $articles = Article::with('tags')->latest()->get();
 
         return view('welcome', compact('articles'));
     }
@@ -75,5 +75,17 @@ class ArticleController extends Controller
         $article->delete();
 
         return redirect(route('articles.index'));
+    }
+    
+    public function adminpage()
+    {
+        $articles = Article::with('tags')->latest()->get();
+
+        return view('admin.adminpage', compact('articles'));
+    }
+    
+    public function adminedit(Article $article)
+    {
+        return view('admin.articles', compact('article'));
     }
 }

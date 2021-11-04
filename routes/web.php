@@ -8,6 +8,10 @@ Route::get('/articles/tags/{tag}', [TagsController::class, 'index'])->name('arti
 
 Route::get('/', [ArticleController::class, 'index']);
 
+Route::get('/admin/articles/{article}', [ArticleController::class, 'adminedit'])->name('admin.article');
+
+Route::get('/admin/adminpage', [ArticleController::class, 'adminpage'])->name('adminpage');
+
 Route::resource('/articles', 'App\Http\Controllers\ArticleController');
 
 Route::get('/about', [ArticleController::class, 'about'])->name('about');

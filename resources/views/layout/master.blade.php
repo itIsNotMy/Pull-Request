@@ -38,10 +38,14 @@
       <a class="p-2 text-muted" href="{{ route('articles.index') }}">Главная</a>
       <a class="p-2 text-muted" href="{{ route('about') }}">О нас</a>
       <a class="p-2 text-muted" href="{{ route('contacts') }}">Контакты</a>
-      @can('create', $article ?? '')
+      @can('create', App\Models\Article::class ?? '')
       <a class="p-2 text-muted" href="{{ route('articles.create') }}">Создать статью</a>
       @endcan
       <a class="p-2 text-muted" href="{{ route('admin.feedback') }}">Админ. раздел</a>
+      @isset(Auth::User()->role->role)
+      @component('components.administrator', ['role' =>  Auth::User()->role->role])
+      @endcomponent
+      @endisset
     </nav>
   </div>
   </div>
