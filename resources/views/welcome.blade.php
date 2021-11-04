@@ -9,7 +9,6 @@
        @if ($article->tags->isNotEmpty())
        @foreach ($article->tags as $tag)
         <p class="blog-post-meta">{{ $tag->title }}</p>
-
        @endforeach
        @endif
        @endforeach

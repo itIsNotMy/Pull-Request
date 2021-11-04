@@ -7,6 +7,9 @@ use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
 use App\Services\TagsSynchronizerInterface;
+use App\Events\ArticleCreate;
+use App\Events\ArticleUpdate;
+use App\Events\ArticleDelete;
 
 class ArticleController extends Controller
 {   
@@ -41,6 +44,8 @@ class ArticleController extends Controller
         $article = Article::create($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
+        
+        event(new ArticleCreate($article));
 
         return redirect(route('articles.index'));
     }
@@ -57,14 +62,16 @@ class ArticleController extends Controller
         $article->update($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
+        
+        event(new ArticleUpdate($article));
 
         return redirect(route('articles.index'));
     }
 
     public function destroy(Article $article)
     {
-        $this->authorize('delete', $article);
-
+        event(new ArticleDelete($article));
+        
         $article->delete();
 
         return redirect(route('articles.index'));
