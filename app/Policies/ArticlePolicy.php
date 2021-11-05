@@ -20,7 +20,7 @@ class ArticlePolicy
         return $article->owner_id == $user->id || $user->role->role == 'administrator';
     }
     
-    public function adminpage(User $user, Article $article)
+    public function adminPages(User $user)
     {
         return $user->role->role == 'administrator';
     }

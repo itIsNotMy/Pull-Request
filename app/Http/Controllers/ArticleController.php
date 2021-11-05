@@ -15,7 +15,13 @@ class ArticleController extends Controller
 {   
     public function index()
     {
-        $articles = Article::with('tags')->latest()->get();
+        if (\Auth::check() && \Auth::User()->role->role == 'administrator') {
+            $articles = Article::with('tags')->latest()->get();
+        }elseif (\Auth::check()) {
+            $articles = Article::with('tags')->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id)->latest()->get();
+        }else {
+            $articles = Article::with('tags')->whereNotNull('datePublished')->latest()->get();
+        }
 
         return view('welcome', compact('articles'));
     }
@@ -77,15 +83,19 @@ class ArticleController extends Controller
         return redirect(route('articles.index'));
     }
     
-    public function adminpage()
+    public function adminPage()
     {
+        $this->authorize('adminPages', Article::class);
+        
         $articles = Article::with('tags')->latest()->get();
 
         return view('admin.adminpage', compact('articles'));
     }
     
-    public function adminedit(Article $article)
+    public function adminEdit(Article $article)
     {
+        $this->authorize('adminPages', Article::class);
+        
         return view('admin.articles', compact('article'));
     }
 }

@@ -35,9 +35,6 @@
     @if (!empty($tags) && $tags->isNotEmpty())
     <label class="form-label">Добавить теги: </label>
     <input type="text" class="form-control" name="tags" value="{{ $tags->pluck('title')->implode(',') ?? '' }}">
-    @elseif(empty($article) && !empty($tags))
-    <label class="form-label">Добавить теги: </label>
-    <input type="text" class="form-control" name="tags">
     @endif
   </div>
   <div class="mb-3 form-check">
