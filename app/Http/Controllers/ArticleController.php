@@ -15,13 +15,13 @@ class ArticleController extends Controller
 {   
     public function index()
     {
-        if (\Auth::check() && \Auth::User()->role->role == 'administrator') {
-            $articles = Article::with('tags')->latest()->get();
-        }elseif (\Auth::check()) {
-            $articles = Article::with('tags')->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id)->latest()->get();
-        }else {
-            $articles = Article::with('tags')->whereNotNull('datePublished')->latest()->get();
-        }
+
+        $articles = Article::with('tags')
+                                ->when(\Auth::check() && \Auth::User()->role->role == 'user', function ($query) {
+                                    return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
+                                })->when(!(\Auth::check()), function ($query) {
+                                    return $query->whereNotNull('datePublished');
+                                })->latest()->get();
 
         return view('welcome', compact('articles'));
     }
