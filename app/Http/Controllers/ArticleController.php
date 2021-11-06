@@ -17,11 +17,15 @@ class ArticleController extends Controller
     {
 
         $articles = Article::with('tags')
-                                ->when(\Auth::check() && \Auth::User()->role->role == 'user', function ($query) {
-                                    return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
-                                })->when(!(\Auth::check()), function ($query) {
-                                    return $query->whereNotNull('datePublished');
-                                })->latest()->get();
+                                ->when(\Auth::check(), function ($query) {
+                                    if(\Auth::User()->role->role == 'user') {
+                                        return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
+                                    } else {
+                                        return $query;
+                                    }
+                                    }, function ($query) {
+                                        return $query->whereNotNull('datePublished');
+                                    })->latest()->get();
 
         return view('welcome', compact('articles'));
     }
