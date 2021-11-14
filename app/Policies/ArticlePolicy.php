@@ -17,6 +17,11 @@ class ArticlePolicy
 
     public function update(User $user, Article $article)
     {
-        return $article->owner_id == $user->id;
+        return $article->owner_id == $user->id || $user->role->role == 'administrator';
+    }
+    
+    public function adminPages(User $user)
+    {
+        return $user->role->role == 'administrator';
     }
 }

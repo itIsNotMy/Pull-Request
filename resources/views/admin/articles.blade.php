@@ -5,11 +5,6 @@
     <p class="blog-post-meta">{{ $article->text }}</p>
     <p class="blog-post-meta">{{ $article->datePublished }}</p>
     @can('update', $article)
-        @if(Auth::User()->role->role == 'administrator')
-            @component('components.administrator', ['role' =>  Auth::User()->role->role])
-            @endcomponent
-        @else
-            <a href="{{ route('articles.edit', $article) }}">Редактировать</a></h2>
-        @endif    
+        <a href="{{ route('articles.edit', $article) }}">Редактировать</a></h2>   
     @endcan
 @endsection
