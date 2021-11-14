@@ -12,4 +12,5 @@
                 @endforeach
             @endif
     @endforeach
+    {{ NOW()->sub(new DateInterval('P0Y0M7DT0H0M0S')) }}
 @endsection

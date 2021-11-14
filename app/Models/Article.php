@@ -2,11 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\TaggingModel;
 
 class Article extends Model implements TaggingModel
 {
+    use HasFactory;
+    
     public $guarded =[];
     
     public function getRouteKeyName()
