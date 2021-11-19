@@ -10,6 +10,7 @@ use App\Services\TagsSynchronizerInterface;
 use App\Events\ArticleCreate;
 use App\Events\ArticleUpdate;
 use App\Events\ArticleDelete;
+use \App\Services\Pushall;
 
 class ArticleController extends Controller
 {   
@@ -45,13 +46,13 @@ class ArticleController extends Controller
         return view('about');
     }
 
-    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer)
+    public function store(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer, Pushall $pushAll)
     {
         $article = Article::create($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
         
-        event(new ArticleCreate($article));
+        event(new ArticleCreate($article, $pushAll));
 
         return redirect(route('articles.index'));
     }

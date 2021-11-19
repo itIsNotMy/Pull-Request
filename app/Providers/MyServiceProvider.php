@@ -12,6 +12,10 @@ class MyServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(\App\Services\TagsSynchronizerInterface::class, \App\Services\TagsSynchronizer::class);
+        
+        $this->app->bind(\App\Services\Pushall::class, function() {
+            return new \App\Services\PushallSelf(config('pushAll.pushAll.api.id'), config('pushAll.pushAll.api.key'));
+        });
     }
     
     public function boot()
