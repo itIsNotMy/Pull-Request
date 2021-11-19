@@ -8,8 +8,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run()
     {
-        $this->call(CreatorRoles::class);
-        
-        $this->call(CreatorDefaultAdmin::class);
+        $this->call([
+                        CreatorRoles::class,
+                        CreatorDefaultAdmin::class,
+                        CreatorUsersArticlesTags::class,
+                    ]);
     }
 }
