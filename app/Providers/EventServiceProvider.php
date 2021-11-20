@@ -12,6 +12,7 @@ use App\Events\ArticleDelete;
 use App\Listeners\SendArticleCreateNotification;
 use App\Listeners\SendArticleUpdateNotification;
 use App\Listeners\SendArticleDeleteNotification;
+use App\Listeners\SendPushAllNotification;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -27,6 +28,7 @@ class EventServiceProvider extends ServiceProvider
         
         ArticleCreate::class => [
             SendArticleCreateNotification::class,
+            SendPushAllNotification::class,
         ],
         
         ArticleUpdate::class => [

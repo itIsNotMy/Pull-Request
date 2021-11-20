@@ -11,9 +11,11 @@ class ArticleCreate
     use Dispatchable;
     
     public $article;
+    public $pushAll;
     
-    public function __construct(Article $article)
+    public function __construct(Article $article, \App\Services\Pushall $pushAll)
     {
         $this->article = $article;
+        $this->pushAll = $pushAll;
     }
 }
