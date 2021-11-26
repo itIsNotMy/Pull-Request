@@ -12,6 +12,19 @@ class Article extends Model implements TaggingModel
     
     public $guarded =[];
     
+    protected static function boot()
+    {
+        parent::boot();
+        
+        static::updating(function (Article $article){
+            
+                                                        $changedFields = $article->getDirty();
+            
+                                                        $article->history()->create(['article_id' => $article->id, 'user_id' => \Auth::User()->id, 'changed_fields' => json_encode($changedFields) ]);
+ 
+                                                    });
+    }
+    
     public function getRouteKeyName()
     {
         return 'code';
@@ -25,5 +38,15 @@ class Article extends Model implements TaggingModel
     public function owner()
     {
         return $this->hasOne(User::class, 'id', 'owner_id');
+    }
+    
+    public function comment()
+    {
+        return $this->hasMany(Comment::class, 'article_id', 'id');
+    }
+    
+    public function history()
+    {
+        return $this->hasMany(ArticlesHistory::class);
     }
 }

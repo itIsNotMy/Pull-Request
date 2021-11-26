@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticlesHistory;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ use App\Events\ArticleDelete;
 use \App\Services\Pushall;
 
 class ArticleController extends Controller
-{   
+{
     public function index()
     {
 
@@ -29,6 +30,8 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
+        $article->load(['comment', 'comment.user']);
+        
         return view('articles', compact('article'));
     }
 
@@ -65,7 +68,7 @@ class ArticleController extends Controller
     }
 
     public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer, Article $article)
-    {
+    {   
         $article->update($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
