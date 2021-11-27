@@ -8,7 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class ArticlesHistory extends Model
 {
     protected $guarded = [];
-    
+
+    protected $casts = [
+        'changed_fields' => 'array',
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

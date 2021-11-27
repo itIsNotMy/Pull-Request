@@ -31,7 +31,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         $article->load(['comment', 'comment.user']);
-        
+
         return view('articles', compact('article'));
     }
 
@@ -54,7 +54,7 @@ class ArticleController extends Controller
         $article = Article::create($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
-        
+
         event(new ArticleCreate($article, $pushAll));
 
         return redirect(route('articles.index'));
@@ -72,7 +72,7 @@ class ArticleController extends Controller
         $article->update($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
-        
+
         event(new ArticleUpdate($article));
 
         return redirect(route('articles.index'));
@@ -81,7 +81,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         event(new ArticleDelete($article));
-        
+
         $article->delete();
 
         return redirect(route('articles.index'));
@@ -90,7 +90,7 @@ class ArticleController extends Controller
     public function adminPage()
     {
         $this->authorize('adminPages', Article::class);
-        
+
         $articles = Article::with('tags')->latest()->get();
 
         return view('admin.adminpage', compact('articles'));
@@ -99,7 +99,7 @@ class ArticleController extends Controller
     public function adminEdit(Article $article)
     {
         $this->authorize('adminPages', Article::class);
-        
+
         return view('admin.articles', compact('article'));
     }
 }

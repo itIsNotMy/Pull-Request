@@ -10,10 +10,10 @@ class CommentController extends Controller
 {
     public function create(Request $request)
     {
-        if(\Auth::check()) {
-            Comment::create(['article_id'=>$request->article, 'user_id'=>\Auth::User()->id, 'text'=>$request->text]);
+        if (\Auth::check()) {
+            Comment::create(['article_id' => $request->article, 'user_id' => \Auth::User()->id, 'text' => $request->text]);
             return redirect()->back();
-        }else {
+        } else {
             throw ValidationException::withMessages(['field_name' => 'Please enter your account']);
         }
     }
