@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\ArticlesHistory;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
@@ -13,7 +14,7 @@ use App\Events\ArticleDelete;
 use \App\Services\Pushall;
 
 class ArticleController extends Controller
-{   
+{
     public function index()
     {
 
@@ -33,6 +34,8 @@ class ArticleController extends Controller
 
     public function show(Article $article)
     {
+        $article->load(['comment', 'comment.user']);
+
         return view('articles', compact('article'));
     }
 
@@ -55,7 +58,7 @@ class ArticleController extends Controller
         $article = Article::create($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
-        
+
         event(new ArticleCreate($article, $pushAll));
 
         return redirect(route('articles.index'));
@@ -69,11 +72,11 @@ class ArticleController extends Controller
     }
 
     public function update(PostingRequestAndUpdatingArticles $request, TagsSynchronizerInterface $TagsSynchronizer, Article $article)
-    {
+    {   
         $article->update($request->validated());
 
         $TagsSynchronizer->sync($request->tags, $article);
-        
+
         event(new ArticleUpdate($article));
 
         return redirect(route('articles.index'));
@@ -82,7 +85,7 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         event(new ArticleDelete($article));
-        
+
         $article->delete();
 
         return redirect(route('articles.index'));
@@ -91,7 +94,7 @@ class ArticleController extends Controller
     public function adminPage()
     {
         $this->authorize('adminPages', Article::class);
-        
+
         $articles = Article::with('tags')->latest()->get();
 
         return view('admin.adminpage', compact('articles'));
@@ -100,7 +103,7 @@ class ArticleController extends Controller
     public function adminEdit(Article $article)
     {
         $this->authorize('adminPages', Article::class);
-        
+
         return view('admin.articles', compact('article'));
     }
 }

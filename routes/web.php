@@ -3,6 +3,9 @@
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TagsController;
+use App\Http\Controllers\CommentController;
+
+Route::post('/comment', [CommentController::class, 'create'])->name('comment');
 
 Route::get('/articles/tags/{tag}', [TagsController::class, 'index'])->name('articles.tags');
 
