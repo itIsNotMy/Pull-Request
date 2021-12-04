@@ -38,6 +38,7 @@
       <a class="p-2 text-muted" href="{{ route('articles.index') }}">Главная</a>
       <a class="p-2 text-muted" href="{{ route('about') }}">О нас</a>
       <a class="p-2 text-muted" href="{{ route('contacts') }}">Контакты</a>
+      <a class="p-2 text-muted" href="{{ route('news.index') }}">Новости</a>
       @can('create', App\Models\Article::class)
       <a class="p-2 text-muted" href="{{ route('articles.create') }}">Создать статью</a>
       @endcan

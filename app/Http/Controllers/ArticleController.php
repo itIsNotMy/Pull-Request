@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\News;
 use App\Models\ArticlesHistory;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
@@ -11,7 +12,7 @@ use App\Services\TagsSynchronizerInterface;
 use App\Events\ArticleCreate;
 use App\Events\ArticleUpdate;
 use App\Events\ArticleDelete;
-use \App\Services\Pushall;
+use App\Services\Pushall;
 
 class ArticleController extends Controller
 {
@@ -23,7 +24,7 @@ class ArticleController extends Controller
                                     return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
                                 })->when(!(\Auth::check()), function ($query) {
                                     return $query->whereNotNull('datePublished');
-                                })->latest()->get();
+                                })->latest()->paginate(10);
 
         return view('welcome', compact('articles'));
     }
@@ -90,10 +91,12 @@ class ArticleController extends Controller
     public function adminPage()
     {
         $this->authorize('adminPages', Article::class);
+        
+        $articles = Article::with('tags')->latest()->paginate(20, ['*'], 'articles');
+        
+        $news = News::paginate(20, ['*'], 'news');
 
-        $articles = Article::with('tags')->latest()->get();
-
-        return view('admin.adminpage', compact('articles'));
+        return view('admin.adminpage', compact('articles'), compact('news'));
     }
     
     public function adminEdit(Article $article)

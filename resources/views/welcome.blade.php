@@ -12,4 +12,5 @@
                 @endforeach
             @endif
     @endforeach
+    <p class="blog-post-meta"> {{ $articles->links() }} </p>
 @endsection
