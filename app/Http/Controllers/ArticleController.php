@@ -20,8 +20,9 @@ class ArticleController extends Controller
     {
 
         $articles = Article::with('tags')
+
                                 ->when(\Auth::check() && \Auth::User()->role->role == 'user', function ($query) {
-                                    return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
+                                  return $query->whereNotNull('datePublished')->orWhere('owner_id', \Auth::User()->id);
                                 })->when(!(\Auth::check()), function ($query) {
                                     return $query->whereNotNull('datePublished');
                                 })->latest()->paginate(10);
