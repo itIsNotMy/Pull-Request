@@ -18,7 +18,7 @@ class NewsPolicy
      */
     public function viewAny(User $user)
     {
-        return $user->role->role == 'administrator';
+        return $user->isAdmin();
     }
 
     /**
@@ -41,7 +41,7 @@ class NewsPolicy
      */
     public function create(User $user)
     {
-        return $user->role->role == 'administrator';
+        return $user->isAdmin();
     }
 
     /**
@@ -53,11 +53,11 @@ class NewsPolicy
      */
     public function update(User $user, News $news)
     {
-        return $user->role->role == 'administrator';
+        return $user->isAdmin();
     }
 
     public function delete(User $user, News $news)
     {
-        return $user->role->role == 'administrator';
+        return $user->isAdmin();
     }
 }
