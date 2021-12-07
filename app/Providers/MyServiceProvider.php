@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
+use Illuminate\Pagination\Paginator;
 
 class MyServiceProvider extends ServiceProvider
 {
@@ -23,6 +24,8 @@ class MyServiceProvider extends ServiceProvider
         View()->composer('layout.sidebar', function($view) {
             $view->with('tagsSidebar', \App\Models\Tag::all());
         });
+        
+        Paginator::defaultView('pagination::default');
     }
     
     public function provides()

@@ -4,6 +4,9 @@ use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\NewsController;
+
+Route::resource('/news', 'App\Http\Controllers\NewsController');
 
 Route::post('/comment', [CommentController::class, 'create'])->name('comment');
 
