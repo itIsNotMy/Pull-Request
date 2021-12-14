@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\News;
+use App\Models\Tag;
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
+use App\Services\TagsSynchronizerInterface;
 
 class NewsController extends Controller
 {
@@ -18,13 +20,17 @@ class NewsController extends Controller
     public function create()
     {
         $this->authorize('create', News::class);
+        
+        $tags = Tag::all();
 
-        return view('news.create');
+        return view('news.create', compact('tags'));
     }
 
-    public function store(NewsRequest $request)
+    public function store(NewsRequest $request, TagsSynchronizerInterface $TagsSynchronizer)
     {
-        News::create($request->validated());
+        $news = News::create($request->validated());
+        
+        $TagsSynchronizer->sync($request->tags, $news);
         
         return redirect(route('news.index'));
     }
@@ -38,12 +44,16 @@ class NewsController extends Controller
     {
         $this->authorize('update', $news);
         
-        return view('news.edit', compact('news'));
+        $tags = Tag::all();
+        
+        return view('news.edit', compact('news'), compact('tags'));
     }
 
-    public function update(NewsRequest $request, News $news)
+    public function update(NewsRequest $request, News $news, TagsSynchronizerInterface $TagsSynchronizer)
     {       
         $news->update($request->validated());
+        
+        $TagsSynchronizer->sync($request->tags, $news);
         
         return redirect(route('news.index'));
     }

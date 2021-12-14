@@ -40,7 +40,8 @@
             <label class="form-label">Ваш комментарий</label>
             <textarea rows="6" cols="15" wrap="hard" type="text" class="form-control" name="text"></textarea>
         </div>
-        <input type="hidden" name="article" value=" {{ $article->id }} "></input>
+        <input type="hidden" name="obj" value=" {{ $article->id }} "></input>
+        <input type="hidden" name="type" value=" {{ get_class($article) }} "></input>
         <button type="submit" class="btn btn-primary">Оставить комментарий</button>
     </form>
     

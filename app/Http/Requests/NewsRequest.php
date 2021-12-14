@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use App\Services\TagsCollection;
 
 class NewsRequest extends FormRequest
 {
@@ -14,6 +15,15 @@ class NewsRequest extends FormRequest
     public function authorize()
     {
         return true;
+    }
+    
+    protected function prepareForValidation()
+    {
+        $tagsRequest = collect(explode(',', $this->tags))->keyBy(function($key){return $key;});
+
+        $this->merge(['tags' => $tagsRequest]);
+        
+        $this->merge(['owner_id' => auth()->id()]);
     }
 
     /**

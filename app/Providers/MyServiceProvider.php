@@ -22,7 +22,7 @@ class MyServiceProvider extends ServiceProvider
     public function boot()
     {
         View()->composer('layout.sidebar', function($view) {
-            $view->with('tagsSidebar', \App\Models\Tag::all());
+            $view->with('tagsSidebar', \App\Models\Tag::with('news')->get());
         });
         
         Paginator::defaultView('pagination::default');

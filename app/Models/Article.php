@@ -12,6 +12,10 @@ class Article extends Model implements TaggingModel
     use HasFactory;
 
     public $guarded =[];
+    
+    protected $appends = [
+        'length_article'
+    ];
 
     protected static function boot()
     {
@@ -32,7 +36,7 @@ class Article extends Model implements TaggingModel
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function owner()
@@ -42,11 +46,26 @@ class Article extends Model implements TaggingModel
 
     public function comment()
     {
-        return $this->hasMany(Comment::class, 'article_id', 'id');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function history()
     {
         return $this->hasMany(ArticlesHistory::class);
+    }
+    
+    public function getlengthArticleAttribute()
+    {   
+        return strlen($this->text);
+    }
+    
+    public function maxArticleText()
+    {   
+        return self::all()->sortByDesc('length_article')->first();
+    }
+    
+    public function minArticleText()
+    {   
+        return self::all()->sortBy('length_article')->first();
     }
 }
