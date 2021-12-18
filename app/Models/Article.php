@@ -5,17 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\TaggingModel;
+use App\Services\CreatorInterface;
 use App\Casts\Json;
 
-class Article extends Model implements TaggingModel
+class Article extends Model implements TaggingModel, CreatorInterface
 {
     use HasFactory;
 
     public $guarded =[];
-    
-    protected $appends = [
-        'length_article'
-    ];
 
     protected static function boot()
     {
@@ -52,20 +49,5 @@ class Article extends Model implements TaggingModel
     public function history()
     {
         return $this->hasMany(ArticlesHistory::class);
-    }
-    
-    public function getlengthArticleAttribute()
-    {   
-        return strlen($this->text);
-    }
-    
-    public function maxArticleText()
-    {   
-        return self::all()->sortByDesc('length_article')->first();
-    }
-    
-    public function minArticleText()
-    {   
-        return self::all()->sortBy('length_article')->first();
     }
 }

@@ -3,16 +3,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\Article;
+use App\Models\Comment;
 use App\Models\News;
 use App\Models\ArticlesHistory;
 use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
 use App\Services\TagsSynchronizerInterface;
+use App\Services\CreatorCommentArticleAndNews;
 use App\Events\ArticleCreate;
 use App\Events\ArticleUpdate;
 use App\Events\ArticleDelete;
 use App\Services\Pushall;
+use Illuminate\Http\Request;
 
 class ArticleController extends Controller
 {
@@ -105,5 +108,12 @@ class ArticleController extends Controller
         $this->authorize('adminPages', Article::class);
 
         return view('admin.articles', compact('article'));
+    }
+
+    public function creatorComment(Article $article, Request $request, CreatorCommentArticleAndNews $creator)
+    {
+        $creator->comment($article, $request);
+
+        return redirect()->back();
     }
 }

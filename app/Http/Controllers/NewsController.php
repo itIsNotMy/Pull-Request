@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Models\News;
 use App\Models\Tag;
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
 use App\Services\TagsSynchronizerInterface;
+use App\Services\CreatorCommentArticleAndNews;
 
 class NewsController extends Controller
 {
@@ -65,5 +67,12 @@ class NewsController extends Controller
         $news->delete();
          
         return redirect(route('news.index'));
+    }
+
+    public function creatorComment(News $news, Request $request, CreatorCommentArticleAndNews $creator)
+    {
+        $creator->comment($news, $request);
+
+        return redirect()->back();
     }
 }

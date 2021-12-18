@@ -8,7 +8,9 @@ use App\Http\Controllers\NewsController;
 
 Route::resource('/news', 'App\Http\Controllers\NewsController');
 
-Route::post('/comment', [CommentController::class, 'create'])->name('comment');
+Route::post('/comment/article/{article}', [ArticleController::class, 'creatorComment'])->name('commentArticle');
+
+Route::post('/comment/news/{news}', [NewsController::class, 'creatorComment'])->name('commentNews');
 
 Route::get('/articles/tags/{tag}', [TagsController::class, 'index'])->name('articles.tags');
 
@@ -32,44 +34,29 @@ Auth::routes();
 
 Route::get('/test', function(){
 
-    $portalStatistics = 'всего статей ' . DB::table('articles')->count() . '</br>';
+    $portalStatistics = 'всего статей ' . \App\Models\Article::count() . '</br>';
 
-    $portalStatistics .= 'всего новостей ' . DB::table('news')->count() . '</br>';
+    $portalStatistics .= 'всего новостей ' . \App\Models\News::count() . '</br>';
 
-    $userArticlesBig = DB::table('articles')->selectRaw('owner_id, count(*) as user_count')->groupBy('owner_id')->orderByRaw('user_count desc')->limit(1);
+    $userArticlesBig = 'Самый большой писака: ' . \App\Models\User::withCount('articles')->orderByRaw('articles_count desc')->limit(1)->value('name') . '</br>';
 
-    $portalStatistics .= 'Самый большой писака: ' . DB::table('users')
-                                                            ->joinSub($userArticlesBig, 'find_bigUser', function ($join) {
-                                                                    $join->on('users.id', '=', 'find_bigUser.owner_id');
-                                                                })->value('name') . '</br>';
-
-    $frequentlyChangingArticle = DB::table('articles_histories')->selectRaw('article_id, count(*) as article_count')->groupBy('article_id')->orderByRaw('article_count desc')->limit(1);
-
-    $getFrequentlyChangingArticle = DB::table('articles')
-                                            ->joinSub($frequentlyChangingArticle, 'find_frequentlyChangingArticle', function ($join) {
-                                                $join->on('articles.id', '=', 'find_frequentlyChangingArticle.article_id');
-                                            })->first();
+    $getFrequentlyChangingArticle = \App\Models\Article::withCount('history')->orderByRaw('history_count desc')->first();
 
     $portalStatistics .= 'Часто меняемая статья: ' .  $getFrequentlyChangingArticle->title . " <a href=" . route('articles.show', $getFrequentlyChangingArticle->code) . " >Сылка</a>  </br>";
 
-    $mostDiscussedArticle = DB::table('comments')->where('commentable_type', "App\Models\Article")->selectRaw('commentable_id, count(*) as article_count')->groupBy('commentable_id')->orderByRaw('article_count desc')->limit(1);
-
-    $getMostDiscussedArticle = DB::table('articles')
-                                       ->joinSub($mostDiscussedArticle, 'find_mostDiscussedArticle', function ($join) {
-                                            $join->on('articles.id', '=', 'find_mostDiscussedArticle.commentable_id');
-                                        })->first();
+    $getMostDiscussedArticle = \App\Models\Article::withCount('comment')->orderByRaw('comment_count desc')->first();
 
     $portalStatistics .= 'Самая обсуждаемая: ' . $getMostDiscussedArticle->title . " <a href=" . route('articles.show', $getMostDiscussedArticle->code) . " >Сылка</a>  </br>";
 
-    $portalStatistics .= 'Среднее количество статей у пользователей: ' . DB::table('articles')->selectRaw('owner_id, count(*) as user_count')->groupBy('owner_id')->having('user_count', '>', 1)->avg('user_count') . '</br>';
+    $portalStatistics .= 'Среднее количество статей у пользователей: ' . \App\Models\User::withCount('articles')->having('articles_count', '>', 2)->avg('articles_count') . '</br>';
 
-    $maxArticleText = \App\Models\Article::maxArticleText();
+    $maxArticleText = \App\Models\Article::selectRaw('code, title, text, LENGTH(text) as length_article')->groupBy('text', 'code', 'title')->orderByRaw('length_article asc')->first();
 
-    $portalStatistics .= 'Самоя большая статья: ' .  $maxArticleText->title . " <a href=" . route('articles.show', $maxArticleText->code) . " >Сылка</a> Размер в символах: " . $maxArticleText->length_article . "</br>";
+    $portalStatistics .= 'Самоя маленькая статья: ' .  $maxArticleText->title . " <a href=" . route('articles.show', $maxArticleText->code) . " >Сылка</a> Размер в символах: " . $maxArticleText->length_article . "</br>";
 
-    $minArticleText = \App\Models\Article::minArticleText();
+    $minArticleText = \App\Models\Article::selectRaw('code, title, text, LENGTH(text) as length_article')->groupBy('text', 'code', 'title')->orderByRaw('length_article desc')->first();
 
-    $portalStatistics .= 'Самоя маленькая статья: ' .  $minArticleText->title . " <a href=" . route('articles.show', $minArticleText->code) . " >Сылка</a> Размер в символах: " . $minArticleText->length_article . "</br>";
+    $portalStatistics .= 'Самоя большая статья: ' .  $minArticleText->title . " <a href=" . route('articles.show', $minArticleText->code) . " >Сылка</a> Размер в символах: " . $minArticleText->length_article . "</br>";
 
     return $portalStatistics;
 });

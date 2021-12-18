@@ -23,26 +23,8 @@
             @endcomponent
         @else
             <a href="{{ route('articles.edit', $article) }}">Редактировать</a></h2>
-        @endif    
+        @endif
     @endcan
-    @if($errors->count())
-        <div class="alert alert-danger mt-4">
-            <ul>
-                @foreach($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <form method="post" action="{{ route('comment') }}">
-    @csrf
-        <div class="mb-3">
-            <label class="form-label">Ваш комментарий</label>
-            <textarea rows="6" cols="15" wrap="hard" type="text" class="form-control" name="text"></textarea>
-        </div>
-        <input type="hidden" name="obj" value=" {{ $article->id }} "></input>
-        <input type="hidden" name="type" value=" {{ get_class($article) }} "></input>
-        <button type="submit" class="btn btn-primary">Оставить комментарий</button>
-    </form>
-    
+    @component('components.comment', ['obj' => $article, 'action' => route('commentArticle', $article)])
+    @endcomponent
 @endsection
