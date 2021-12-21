@@ -10,7 +10,7 @@ use App\Models\Tag;
 use App\Http\Requests\PostingRequestAndUpdatingArticles;
 use Carbon\Carbon;
 use App\Services\TagsSynchronizerInterface;
-use App\Services\CreatorCommentArticleAndNews;
+use App\Services\CreatorCommentArticleAndNewsInterface;
 use App\Events\ArticleCreate;
 use App\Events\ArticleUpdate;
 use App\Events\ArticleDelete;
@@ -110,7 +110,7 @@ class ArticleController extends Controller
         return view('admin.articles', compact('article'));
     }
 
-    public function creatorComment(Article $article, Request $request, CreatorCommentArticleAndNews $creator)
+    public function creatorComment(Article $article, Request $request, CreatorCommentArticleAndNewsInterface $creator)
     {
         $creator->comment($article, $request);
 

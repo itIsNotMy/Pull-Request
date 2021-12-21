@@ -18,9 +18,7 @@ class MyServiceProvider extends ServiceProvider
             return new \App\Services\PushallSelf(config('pushAll.pushAll.api.id'), config('pushAll.pushAll.api.key'));
         });
 
-        $this->app->bind(\App\Services\CreatorCommentArticleAndNews::class, function() {
-            return new \App\Services\CreatorCommentArticleAndNews;
-        });
+        $this->app->singleton(\App\Services\CreatorCommentArticleAndNewsInterface::class, \App\Services\CreatorCommentArticleAndNews::class);
     }
 
     public function boot()
