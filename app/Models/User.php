@@ -40,17 +40,17 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-    
+
     public function role()
     {
         return $this->belongsTo(Role::class, 'role_id', 'id');
     }
-    
+
     public function articles()
     {
         return $this->hasMany(Article::class, 'owner_id', 'id');
     }
-    
+
     public function isAdmin()
     {
         return $this->role->role == 'administrator';

@@ -6,14 +6,14 @@ use App\Models\Tag;
 
 class TagsSynchronizer implements TagsSynchronizerInterface
 {
-    public function sync(\Illuminate\Support\Collection $Collection, \App\Services\TaggingModel $model)
+    public function sync(\Illuminate\Support\Collection $collection, \App\Services\TaggingModel $model)
     {
 
         $articleTags = $model->tags->keyBy('title');
 
-        $tagsAdded = $Collection->diffKeys($articleTags);
+        $tagsAdded = $collection->diffKeys($articleTags);
 
-        $tagsRemote = $articleTags->diffKeys($Collection);
+        $tagsRemote = $articleTags->diffKeys($collection);
         
         if ($tagsAdded->isNotEmpty()) {
             foreach ($tagsAdded as $val){

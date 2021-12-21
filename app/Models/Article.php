@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Services\TaggingModel;
+use App\Services\CreatorInterface;
 use App\Casts\Json;
 
-class Article extends Model implements TaggingModel
+class Article extends Model implements TaggingModel, CreatorInterface
 {
     use HasFactory;
 
@@ -32,7 +33,7 @@ class Article extends Model implements TaggingModel
 
     public function tags()
     {
-        return $this->belongsToMany(Tag::class);
+        return $this->morphToMany(Tag::class, 'taggable');
     }
 
     public function owner()
@@ -42,7 +43,7 @@ class Article extends Model implements TaggingModel
 
     public function comment()
     {
-        return $this->hasMany(Comment::class, 'article_id', 'id');
+        return $this->morphMany(Comment::class, 'commentable');
     }
 
     public function history()

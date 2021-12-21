@@ -10,6 +10,8 @@ class TagsController extends Controller
     {
         $articles = $tag->articles()->with('tags')->latest()->get();
         
-        return view('welcome', compact('articles'));
+        $news = $tag->news()->with('tags')->latest()->get();
+        
+        return view('welcome', compact('articles'), compact('news'));
     }
 }
