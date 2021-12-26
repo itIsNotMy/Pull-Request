@@ -8,7 +8,7 @@ use App\Models\Comment;
 use Illuminate\Http\Request;
 use App\Http\Requests\NewsRequest;
 use App\Services\TagsSynchronizerInterface;
-use App\Services\CreatorCommentArticleAndNews;
+use App\Services\CreatorCommentArticleAndNewsInterface;
 
 class NewsController extends Controller
 {
@@ -69,8 +69,8 @@ class NewsController extends Controller
         return redirect(route('news.index'));
     }
 
-    public function creatorComment(News $news, Request $request, CreatorCommentArticleAndNews $creator)
-    {
+    public function creatorComment(News $news, Request $request, CreatorCommentArticleAndNewsInterface $creator)
+    {        
         $creator->comment($news, $request);
 
         return redirect()->back();
