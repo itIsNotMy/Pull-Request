@@ -2,6 +2,7 @@
 @section('title', 'Главная')
 @section('content')
 <h3 class="pb-4 mb-4 fst-italic border-bottom">Админнистраторский раздел</h3>
+<a href="{{ route('admin.reports') }}">Отчеты</a>
 <h3 class="blog-post-title">Статьи</h3>
        @foreach ($articles as $article)
             <h2 class="blog-post-title"><a href="{{ route('admin.article', $article) }}">{{ $article->title }}</a></h2>
