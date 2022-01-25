@@ -31,28 +31,13 @@ Route::post('/contacts', [ContactController::class, 'store']);
 
 Route::get('/admin/feedback', [ContactController::class, 'adminFeedback'])->name('admin.feedback');
 
-/* Route::get('/admin/reports', function(){
-    if(\Auth::check() && \Auth::User()->isAdmin()) {
-        return view('admin.reports');
-    } else {
-        return redirect()->back();
-    }
-})->name('admin.reports');
-
-Route::post('/admin/reports', function(\Illuminate\Http\Request $request){
-    if(\Auth::check() && \Auth::User()->isAdmin()) {
-        App\Jobs\JobReport::dispatchNow($request);
-        return redirect()->back();
-    } else {
-        return redirect()->back();
-    }
-}); */
-
 Route::get('/admin/reports', [ReportsController::class, 'index'])->name('admin.reports');
 
 Route::post('/admin/reports', [ReportsController::class, 'reports']);
 
 Auth::routes();
+
+Route::get('/jjj', function(){ event(new \App\Events\test('13223123')); });
 
 Route::get('/test', function(){
 
