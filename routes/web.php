@@ -5,6 +5,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\TagsController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\NewsController;
+use App\Http\Controllers\ReportsController;
 
 Route::resource('/news', 'App\Http\Controllers\NewsController');
 
@@ -29,6 +30,27 @@ Route::get('/contacts', [ContactController::class, 'contacts'])->name('contacts'
 Route::post('/contacts', [ContactController::class, 'store']);
 
 Route::get('/admin/feedback', [ContactController::class, 'adminFeedback'])->name('admin.feedback');
+
+/* Route::get('/admin/reports', function(){
+    if(\Auth::check() && \Auth::User()->isAdmin()) {
+        return view('admin.reports');
+    } else {
+        return redirect()->back();
+    }
+})->name('admin.reports');
+
+Route::post('/admin/reports', function(\Illuminate\Http\Request $request){
+    if(\Auth::check() && \Auth::User()->isAdmin()) {
+        App\Jobs\JobReport::dispatchNow($request);
+        return redirect()->back();
+    } else {
+        return redirect()->back();
+    }
+}); */
+
+Route::get('/admin/reports', [ReportsController::class, 'index'])->name('admin.reports');
+
+Route::post('/admin/reports', [ReportsController::class, 'reports']);
 
 Auth::routes();
 
