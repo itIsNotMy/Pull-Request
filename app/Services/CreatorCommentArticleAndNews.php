@@ -9,6 +9,11 @@ class CreatorCommentArticleAndNews implements CreatorCommentArticleAndNewsInterf
 {
     public function comment (\App\Services\CreatorInterface $model, \Illuminate\Http\Request $request){
         if (\Auth::check()) {
+
+            $validated = $request->validate([
+                                'text'=>'required',
+                            ]);
+
            $model->comment()->create(['text' => $request->text, 'user_id' => \Auth::User()->id]);
         } else {
             throw ValidationException::withMessages(['field_name' => 'Please enter your account']);

@@ -37,8 +37,6 @@ Route::post('/admin/reports', [ReportsController::class, 'reports']);
 
 Auth::routes();
 
-Route::get('/jjj', function(){ event(new \App\Events\test('13223123')); });
-
 Route::get('/test', function(){
 
     $portalStatistics = 'всего статей ' . \App\Models\Article::count() . '</br>';
