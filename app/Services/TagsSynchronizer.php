@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Tag;
+use App\Events\CreatingConnectionsModelTag;
+use App\Events\RemovingConnectionsModelTag;
 
 class TagsSynchronizer implements TagsSynchronizerInterface
 {
@@ -14,16 +16,18 @@ class TagsSynchronizer implements TagsSynchronizerInterface
         $tagsAdded = $collection->diffKeys($articleTags);
 
         $tagsRemote = $articleTags->diffKeys($collection);
-        
+
         if ($tagsAdded->isNotEmpty()) {
-            foreach ($tagsAdded as $val){
+            foreach ($tagsAdded as $val) {
                 $tag = Tag::firstOrCreate(['title' => $val]);
                 $model->tags()->attach($tag);
+                event(new CreatingConnectionsModelTag($tagsAdded));
             }
         }
 
         if ($tagsRemote->isNotEmpty()) {
             $model->tags()->detach($tagsRemote);
+            event(new RemovingConnectionsModelTag($tagsRemote));
         }
     }
 }

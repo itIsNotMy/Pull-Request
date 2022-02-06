@@ -24,7 +24,7 @@ class MyServiceProvider extends ServiceProvider
     public function boot()
     {
         View()->composer('layout.sidebar', function($view) {
-            $view->with('tagsSidebar', \App\Models\Tag::get());
+            $view->with('tagsSidebar', \App\Models\Tag::all());
         });
 
         Paginator::defaultView('pagination::default');
