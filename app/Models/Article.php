@@ -26,16 +26,16 @@ class Article extends Model implements TaggingModel, CreatorInterface
         });
 
         static::created(function () {
-            \Cache::tags(['article', 'article_tag'])->flush();
+            \Cache::tags('article')->flush();
         });
 
         static::updated(function (Article $article) {
-            \Cache::tags(['article', 'article_tag'])->flush();
+            \Cache::tags('article')->flush();
             \Cache::tags(['comment', 'article'])->forget('comment=' . $article->id);
         });
 
         static::deleted(function () {
-            \Cache::tags(['article', 'article_tag'])->flush();
+            \Cache::tags('article')->flush();
         });
     }
 

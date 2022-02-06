@@ -14,13 +14,10 @@ class RemovingConnectionsModelTag
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $model;
-
     public $tagsCollect;
 
-    public function __construct($model, $tagsCollect)
+    public function __construct($tagsCollect)
     {
-        $this->model = $model;
         $this->tagsCollect = $tagsCollect;
     }
 }

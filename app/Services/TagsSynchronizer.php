@@ -21,13 +21,13 @@ class TagsSynchronizer implements TagsSynchronizerInterface
             foreach ($tagsAdded as $val) {
                 $tag = Tag::firstOrCreate(['title' => $val]);
                 $model->tags()->attach($tag);
-                event(new CreatingConnectionsModelTag($model, $tagsAdded));
+                event(new CreatingConnectionsModelTag($tagsAdded));
             }
         }
 
         if ($tagsRemote->isNotEmpty()) {
             $model->tags()->detach($tagsRemote);
-            event(new RemovingConnectionsModelTag($model, $tagsRemote));
+            event(new RemovingConnectionsModelTag($tagsRemote));
         }
     }
 }

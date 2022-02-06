@@ -18,16 +18,16 @@ class News extends Model implements TaggingModel, CreatorInterface
         parent::boot();
 
         static::created(function () {
-            \Cache::tags(['news', 'news_tag'])->flush();
+            \Cache::tags('news')->flush();
         });
 
         static::updated(function (News $news) {
-            \Cache::tags(['news', 'news_tag'])->flush();
+            \Cache::tags('news')->flush();
             \Cache::tags(['comment', 'news'])->forget('comment=' . $news->id);
         });
 
         static::deleted(function () {
-            \Cache::tags(['news', 'news_tag'])->flush();
+            \Cache::tags('news')->flush();
         });
     }
 
